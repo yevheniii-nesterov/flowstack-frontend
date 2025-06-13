@@ -74,8 +74,7 @@ export const useUserStore = defineStore({
 
     async signUp(payload) {
       const response = await postData('auth/register', payload)
-      this.setToken(response.token)
-      router.replace('/')
+      router.replace('/login')
 
     },
 
