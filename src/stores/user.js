@@ -52,24 +52,9 @@ export const useUserStore = defineStore({
       this.token = token
       localStorage.setItem('token', token)
     },
-    async checkToken(){
-      try{
-        auth.onIdTokenChanged(user => {
-          if (user) {
-            this.tokenValid=true
-          } else {
-            this.tokenValid = false
-          }
-        })
-      }
-      catch(err){
-        this.tokenValid = false
-      }
-    },
 
     async fetchUserData() {
       this.user = auth.currentUser
-
     },
 
     async signUp(payload) {
@@ -81,7 +66,7 @@ export const useUserStore = defineStore({
       console.log(payload)
       const response = await postData('auth/login', payload)
       this.setToken(response.token)
-      router.replace('/')
+      await router.replace('/')
     },
 
     async logout() {
