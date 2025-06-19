@@ -16,12 +16,15 @@ router.beforeEach(async function(to, from, next){
   const userStore = useUserStore()
   if(to.fullPath==="/"){
      next('/home')
+     console.log("a");
   }
   if(to.meta.requiresUnAuth && userStore.tokenIsValid){
-    next('/home')
+    next('/home');
+    console.log("b");
   }
   else if(to.meta.requiresAuth && !userStore.tokenIsValid){
     next('/login')
+
   }
   else{
     next()

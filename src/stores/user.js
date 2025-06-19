@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import router from '../router'
-import {apiService, postData} from "@/api/http/apiService";
+import {apiService, getData, postData} from "@/api/http/apiService";
 
 
 // Import the functions you need from the SDKs you need
@@ -51,10 +51,14 @@ export const useUserStore = defineStore({
     setToken(token) {
       this.token = token
       localStorage.setItem('token', token)
+      if (token) {
+        this.tokenValid=true
+      }
     },
 
     async fetchUserData() {
-      this.user = auth.currentUser
+      const response = await getData('/profile')
+      this.user = response;
     },
 
     async signUp(payload) {
@@ -66,7 +70,7 @@ export const useUserStore = defineStore({
       console.log(payload)
       const response = await postData('auth/login', payload)
       this.setToken(response.token)
-      await router.replace('/')
+      await router.replace('/home')
     },
 
     async logout() {
@@ -78,33 +82,22 @@ export const useUserStore = defineStore({
 
     async changeUserName(enteredName) {
       console.log(enteredName)
-      await updateProfile(auth.currentUser, {
-        displayName: enteredName,
-      }).then(function() {
-
-      }).catch(function(error) {
-        console.log(error)
+      const response = await postData('/profile/change-profile', {
+        "name": enteredName
       })
     },
 
     async changePassword(newPassword) {
       console.log(newPassword)
-      await updatePassword(auth.currentUser, newPassword)
-          .then(function() {
-            this.setToken(auth.currentUser.accessToken)
-          }).catch(function(error) {
-            console.log(error)
-          })
-
+      const response = await postData('/profile/change-profile', {
+        "password": newPassword
+      })
     },
 
     async changeEmail(newEmail){
-      await updateEmail(auth.currentUser, newEmail)
-          .then(function() {
-            this.setToken(auth.currentUser.accessToken)
-          }).catch(function(error) {
-            console.log(error)
-          })
+      const response = await postData('/profile/change-profile', {
+        "email": newEmail
+      })
 
     },
     async resetPass(Email){

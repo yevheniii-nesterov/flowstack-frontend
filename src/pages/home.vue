@@ -1,9 +1,7 @@
 <script setup>
-import { auth, db, useUserStore } from '@/stores/user'
-import {DataDB} from '@/stores/dataDB'
+/*import { auth, db, useUserStore } from '@/stores/user'
 import {v4 as uuidv4} from 'uuid'
 import { Icon } from '@iconify/vue'
-const dataBase = DataDB()
 const tasks = ref([])
 const customers = ref([])
 const categories = ref([])
@@ -12,17 +10,17 @@ const upCategory = ref(false)
 const newCategory = ref({
   categoryId: '',
   name: '',
-})
+})*/
 
 
-const rulesUser = ref({
+/*const rulesUser = ref({
   emailRules: [
     v => !!v || "Пошта обов'язкова",
     v => /.+@.+/.test(v) || 'Некоректний запис пошти',
   ],
-})
+})*/
 
-const searchTerm = ref('')
+/*const searchTerm = ref('')
 
 onMounted( async () => {
   await allTask()
@@ -57,7 +55,7 @@ const customer = ref({
   phone:'',
   description:'',
   customerID:'',
-})
+})*/
 
 
 function getCurrentDateTime() {
@@ -250,7 +248,7 @@ async function createCategory(){
   await allTask()
 }
 
-const filteredData = computed(() => {
+/*const filteredData = computed(() => {
   const found = tasks.value
 
   if (!searchTerm.value) {
@@ -263,7 +261,7 @@ const filteredData = computed(() => {
       String(value).toLowerCase().includes(searchTerm.value.toLowerCase()),
     )
   })
-})
+})*/
 
 
 function sortedData(){

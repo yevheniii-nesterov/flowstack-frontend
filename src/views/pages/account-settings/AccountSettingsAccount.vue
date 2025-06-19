@@ -3,7 +3,7 @@ import avatar1 from '@/assets/images/avatars/avatar-1.png'
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 const userData = ref({
-  name : userStore.getUserData.displayName,
+  name : userStore.getUserData.name,
   email : userStore.getUserData.email,
 })
 
@@ -64,7 +64,7 @@ const changeName =( async() => {
     await userStore.changeUserName(newName.value)
     await userStore.fetchUserData()
     console.log(userStore.getUserData.displayName)
-    userData.value.name = userStore.getUserData.displayName
+    userData.value.name = userStore.getUserData.name
     newName.value=''
   }
 })
