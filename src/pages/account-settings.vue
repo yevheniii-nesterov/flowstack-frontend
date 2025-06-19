@@ -16,6 +16,9 @@ const activeTab = ref(route.params.tab)
       :touch="false"
     >
       <!-- Account -->
+      <VWindowItem value="account">
+        <AccountSettingsAccount />
+      </VWindowItem>
     </VWindow>
   </div>
 </template>
