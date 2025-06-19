@@ -77,7 +77,62 @@ export const useUserStore = defineStore({
       router.replace('/login')
 
     },
+    async login(payload) {
+      console.log(payload)
+      const response = await postData('auth/login', payload)
+      this.setToken(response.token)
+      router.replace('/')
+    },
 
+    async logout() {
+      await signOut(auth)
+      this.token = null
+      localStorage.clear()
+      router.replace('/login')
+    },
+
+    async changeUserName(enteredName) {
+      console.log(enteredName)
+      await updateProfile(auth.currentUser, {
+        displayName: enteredName,
+      }).then(function() {
+
+      }).catch(function(error) {
+        console.log(error)
+      })
+    },
+
+    async changePassword(newPassword) {
+      console.log(newPassword)
+      await updatePassword(auth.currentUser, newPassword)
+          .then(function() {
+            this.setToken(auth.currentUser.accessToken)
+          }).catch(function(error) {
+            console.log(error)
+          })
+
+    },
+
+    async changeEmail(newEmail){
+      await updateEmail(auth.currentUser, newEmail)
+          .then(function() {
+            this.setToken(auth.currentUser.accessToken)
+          }).catch(function(error) {
+            console.log(error)
+          })
+
+    },
+    async resetPass(Email){
+      console.log(Email)
+      await sendPasswordResetEmail(auth, Email)
+          .then(() => {
+          })
+          .catch(error => {
+            const errorCode = error.code
+            const errorMessage = error.message
+          })
+
+    },
 
   },
 })

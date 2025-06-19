@@ -39,20 +39,20 @@ const vuetifyTheme = useTheme()
         icon: { icon: 'mdi-home-outline' }
       }"
     />
-    <VerticalNavLink
-      :item="{
-        title: 'Замовники',
-        to: 'customer',
-        icon: { icon: 'mdi-account' }
-      }"
-    />
-    <VerticalNavLink
-      :item="{
-        title: 'Календар',
-        to: 'calendar',
-        icon: { icon: 'mdi-calendar-account' }
-      }"
-    />
+<!--    <VerticalNavLink-->
+<!--      :item="{-->
+<!--        title: 'Замовники',-->
+<!--        to: 'customer',-->
+<!--        icon: { icon: 'mdi-account' }-->
+<!--      }"-->
+<!--    />-->
+<!--    <VerticalNavLink-->
+<!--      :item="{-->
+<!--        title: 'Календар',-->
+<!--        to: 'calendar',-->
+<!--        icon: { icon: 'mdi-calendar-account' }-->
+<!--      }"-->
+<!--    />-->
     <VerticalNavLink
       :item="{
         title: 'Профіль',
