@@ -74,14 +74,12 @@ const logout = () => {
             <VListItemTitle>Профіль</VListItemTitle>
           </VListItem>
 
-          <!-- Divider -->
           <VDivider class="my-2" />
 
-          <!-- 👉 Logout -->
-          <VListItem
-            to="/login"
-            @click="logout"
-          >
+           <VListItem
+             to="/login"
+             @click="logout"
+           >
             <template #prepend>
               <VIcon
                 class="me-2"
