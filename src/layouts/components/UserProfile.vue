@@ -1,6 +1,7 @@
 <script setup>
 import avatar1 from '@/assets/images/avatars/avatar-1.png'
 import { useUserStore, auth } from '@/stores/user'
+import router from "@/router";
 const userStore = useUserStore()
 onMounted( async () => {
   await userStore.fetchUserData()
@@ -17,6 +18,7 @@ const avatarBadgeProps = {
 }
 
 const logout = () => {
+  router.replace('/login')
   userStore.logout()
 }
 </script>

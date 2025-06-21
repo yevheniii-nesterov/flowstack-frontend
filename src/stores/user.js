@@ -1,12 +1,21 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import router from '../router'
-import {apiService, getData, postData} from "@/api/http/apiService";
+import {apiService, deleteData, getData, postData} from "@/api/http/apiService";
 
 
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app"
-import { getDatabase} from "firebase/database"
-import {sendPasswordResetEmail,getAuth,createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword, signOut,updatePassword,updateEmail} from 'firebase/auth'
+import {initializeApp} from "firebase/app"
+import {getDatabase} from "firebase/database"
+import {
+    sendPasswordResetEmail,
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    signInWithEmailAndPassword,
+    signOut,
+    updatePassword,
+    updateEmail
+} from 'firebase/auth'
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -15,14 +24,14 @@ import {sendPasswordResetEmail,getAuth,createUserWithEmailAndPassword, updatePro
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBK-6H5yNztvGBnn1AT7yh13xxXs16bR-U",
-  authDomain: "diplom-5ae23.firebaseapp.com",
-  projectId: "diplom-5ae23",
-  storageBucket: "diplom-5ae23.appspot.com",
-  messagingSenderId: "209774935604",
-  appId: "1:209774935604:web:8fba49382a7a8d40499461",
-  measurementId: "G-X4BTVV1H8B",
-  databaseURL: "https://diplom-5ae23-default-rtdb.europe-west1.firebasedatabase.app",
+    apiKey: "AIzaSyBK-6H5yNztvGBnn1AT7yh13xxXs16bR-U",
+    authDomain: "diplom-5ae23.firebaseapp.com",
+    projectId: "diplom-5ae23",
+    storageBucket: "diplom-5ae23.appspot.com",
+    messagingSenderId: "209774935604",
+    appId: "1:209774935604:web:8fba49382a7a8d40499461",
+    measurementId: "G-X4BTVV1H8B",
+    databaseURL: "https://diplom-5ae23-default-rtdb.europe-west1.firebasedatabase.app",
 }
 
 const firebaseApp = initializeApp(firebaseConfig)
@@ -31,88 +40,106 @@ export const db = getDatabase(firebaseApp)
 export const auth = getAuth(firebaseApp)
 
 
-
 export const useUserStore = defineStore({
-  id: 'user',
+    id: 'user',
 
-  state: () => ({
-    token: localStorage.getItem('token'),
-    user: {},
-    tokenValid: false,
-  }),
+    state: () => ({
+        token: localStorage.getItem('token'),
+        user: {},
+        tokenValid: false,
+    }),
 
-  getters: {
-    isUserAuth: state => !!state.token,
-    getUserData: state => state.user,
-    tokenIsValid: state => state.tokenValid,
-  },
-
-  actions: {
-    setToken(token) {
-      this.token = token
-      localStorage.setItem('token', token)
-      if (token) {
-        this.tokenValid=true
-      }
+    getters: {
+        isUserAuth: state => !!state.token,
+        getUserData: state => state.user,
+        tokenIsValid: state => state.tokenValid,
     },
 
-    async fetchUserData() {
-      const response = await getData('/profile')
-      this.user = response;
+    actions: {
+        setToken(token) {
+            this.token = token
+            localStorage.setItem('token', token)
+            if (token) {
+                this.tokenValid = true
+            }
+        },
+
+        async fetchUserData() {
+            const response = await getData('/profile')
+            this.user = response;
+        },
+
+        async fetchTasksData() {
+            const response = await getData('/tasks')
+            return response;
+        },
+
+        async deleteTaskData(id) {
+            const response = await deleteData('/tasks/delete/' + id)
+            return response;
+        },
+
+        async postTaskData(task) {
+            const response = await postData('/tasks/create', task)
+            return response;
+        },
+
+        async updateTaskData(task, id) {
+            const response = await patchData('/tasks/update/' + id, task)
+            return response;
+        },
+
+        async signUp(payload) {
+            const response = await postData('auth/register', payload)
+            router.replace('/login')
+
+        },
+        async login(payload) {
+            console.log(payload)
+            const response = await postData('auth/login', payload)
+            this.setToken(response.token)
+            await router.replace('/home')
+        },
+
+        async logout() {
+            this.token = null
+            localStorage.clear()
+            router.replace('/login')
+        },
+
+        async changeUserName(enteredName) {
+            console.log(enteredName)
+            const response = await postData('/profile/change-profile', {
+                "name": enteredName
+            })
+        },
+
+        async changePassword(newPassword) {
+            console.log(newPassword)
+            const response = await postData('/profile/change-profile', {
+                "password": newPassword
+            })
+        },
+
+        async changeEmail(newEmail) {
+            const response = await postData('/profile/change-profile', {
+                "email": newEmail
+            })
+
+        },
+        async resetPass(Email) {
+            console.log(Email)
+            await sendPasswordResetEmail(auth, Email)
+                .then(() => {
+                })
+                .catch(error => {
+                    const errorCode = error.code
+                    const errorMessage = error.message
+                })
+
+        },
+
     },
-
-    async signUp(payload) {
-      const response = await postData('auth/register', payload)
-      router.replace('/login')
-
-    },
-    async login(payload) {
-      console.log(payload)
-      const response = await postData('auth/login', payload)
-      this.setToken(response.token)
-      await router.replace('/home')
-    },
-
-    async logout() {
-      await signOut(auth)
-      this.token = null
-      localStorage.clear()
-      router.replace('/login')
-    },
-
-    async changeUserName(enteredName) {
-      console.log(enteredName)
-      const response = await postData('/profile/change-profile', {
-        "name": enteredName
-      })
-    },
-
-    async changePassword(newPassword) {
-      console.log(newPassword)
-      const response = await postData('/profile/change-profile', {
-        "password": newPassword
-      })
-    },
-
-    async changeEmail(newEmail){
-      const response = await postData('/profile/change-profile', {
-        "email": newEmail
-      })
-
-    },
-    async resetPass(Email){
-      console.log(Email)
-      await sendPasswordResetEmail(auth, Email)
-          .then(() => {
-          })
-          .catch(error => {
-            const errorCode = error.code
-            const errorMessage = error.message
-          })
-
-    },
-
-  },
 })
 
 

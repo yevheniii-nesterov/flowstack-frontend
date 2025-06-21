@@ -41,6 +41,14 @@ const postData = async (url, payload) => {
     return Promise.reject(e)
   }
 }
+const patchData = async (url, payload) => {
+    try {
+        const response = await apiService.patch(url, { ...payload })
+        return response.data
+    } catch (e) {
+        return Promise.reject(e)
+    }
+}
 const deleteData = async (url) => {
   try {
     const response = await apiService.delete(url)
